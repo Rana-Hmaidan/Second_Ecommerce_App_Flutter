@@ -47,6 +47,6 @@ List<CategoryItemModel> dummyCategories =[
     id: 6, 
     name: 'Hats',
     imgUrl: 'https://cms.cloudinary.vpsvc.com/images/c_scale,dpr_auto,f_auto,q_auto:best,t_productPageHeroGalleryTransformation,w_auto/legacy_dam/en-ie/s001208848/Standard-Embroidred-Hat-hero-001', 
-    productsCount: 100
+    productsCount: 120
   ),
 ];
