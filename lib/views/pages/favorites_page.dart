@@ -33,7 +33,9 @@ class _FavoritesPageState extends State<FavoritesPage> {
             children: [
               const SearchBarWidget(),
               const SizedBox(height: 16.0),
-              ListView.separated(
+              SizedBox(
+                height: 70,
+                child: ListView.separated(
                     itemCount: dummyCategories.length,
                     scrollDirection: Axis.horizontal,
                     separatorBuilder: (_, index) => const SizedBox(width: 10),
@@ -61,6 +63,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
                         }
                       );
                 },
+               ),
               ),
               const SizedBox(height: 16.0),
               if (filteredfavoritesProducts.isNotEmpty)
@@ -71,7 +74,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
                         //physics: const NeverScrollableScrollPhysics(),
                         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
-                          crossAxisSpacing: 25,
+                          crossAxisSpacing: 20,
                           mainAxisSpacing: 10,
                           childAspectRatio: 1.5 /2,
                         ),
