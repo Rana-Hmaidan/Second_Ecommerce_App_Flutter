@@ -13,14 +13,14 @@ class CategoryChipWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return InputChip(
       label: Text(label),
-      labelStyle:  TextStyle(
-          color: isSelected? AppColors.white : AppColors.black87,
+      labelStyle: TextStyle(
+        color: isSelected? AppColors.white : AppColors.black87,
       ),
       selected: isSelected,
+      selectedColor: AppColors.primary,
       onPressed: onTap,
       showCheckmark: false,
-      backgroundColor: AppColors.grey2,
-      selectedColor: AppColors.primary,
+      backgroundColor: AppColors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.0),
         side: const BorderSide(color: AppColors.grey),

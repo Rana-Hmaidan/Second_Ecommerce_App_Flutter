@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:second_ecommerce_app_flutter/models/product_item_model.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:second_ecommerce_app_flutter/utils/route/app_routes.dart';
+import 'package:second_ecommerce_app_flutter/view_models/home_cubit/home_cubit.dart';
 import 'package:second_ecommerce_app_flutter/views/widgets/custom_carousel_indicatior.dart';
 import 'package:second_ecommerce_app_flutter/views/widgets/product_item.dart';
 
@@ -8,51 +10,80 @@ class HomeTabView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 24.0),
-            const CustomCarouselIndicator(),
-            const SizedBox(height: 16.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    final cubit = BlocProvider.of<HomeCubit>(context);
+    return BlocBuilder<HomeCubit, HomeState>(
+      bloc: cubit,
+      buildWhen: (previous, current) =>
+          current is HomeLoading ||
+          current is HomeLoaded ||
+          current is HomeError,
+      builder: (context, state) {
+        if (state is HomeLoading) {
+          return const Center(
+            child: CircularProgressIndicator.adaptive(),
+          );
+        } else if (state is HomeError) {
+          return Center(
+            child: Text(state.message),
+          );
+        } else if (state is HomeLoaded) {
+          final products = state.products;
+          final announcements = state.announcements;
+          return SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'New Arrivals',
-                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
+                const SizedBox(height: 24.0),
+                CustomCarouselIndicator(announcements: announcements),
+                const SizedBox(height: 16.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'New Arrivals',
+                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                    ),
+                    TextButton(
+                      onPressed: () {},
+                      child: const Text('See More'),
+                    ),
+                  ],
                 ),
-                TextButton(
-                  onPressed: () {},
-                  child: const Text('See More'),
+                const SizedBox(height: 16.0),
+                GridView.builder(
+                  itemCount: products.length,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 10,
+                    crossAxisSpacing: 10,
+                  ),
+                  itemBuilder: (context, index) {
+                    return InkWell(
+                      onTap: () =>
+                        Navigator.of(context, rootNavigator: true).pushNamed(
+                          AppRoutes.productDetails,
+                          arguments: products[index],
+                      ),
+                      child: ProductItem(
+                          productItem: products[index],
+                      ),
+                    );
+                  },
                 ),
               ],
             ),
-            GridView.builder(
-              itemCount: dummyProducts.length,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: 25,
-                crossAxisSpacing: 10,
-              ),
-              itemBuilder: (context, index) {
-                return InkWell(
-                  onTap: () {},
-                  child: ProductItem(
-                    productItem: dummyProducts[index],
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+        } else {
+          return const SizedBox();
+        }
+      },
     );
   }
 }

@@ -1,6 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:second_ecommerce_app_flutter/models/category_item_model.dart';
-import 'package:second_ecommerce_app_flutter/models/product_item_model.dart';
+import 'package:second_ecommerce_app_flutter/shared/widget_extension.dart';
+import 'package:second_ecommerce_app_flutter/utils/route/app_routes.dart';
+import 'package:second_ecommerce_app_flutter/view_models/favorites_cubit/favorites_cubit.dart';
 import 'package:second_ecommerce_app_flutter/views/widgets/category_chip_widget.dart';
 import 'package:second_ecommerce_app_flutter/views/widgets/product_item.dart';
 import 'package:second_ecommerce_app_flutter/views/widgets/search_bar_widget.dart';
@@ -15,80 +19,92 @@ class FavoritesPage extends StatefulWidget {
 class _FavoritesPageState extends State<FavoritesPage> {
 
   String? selectedCategory;
-  late List<ProductItemModel> filteredfavoritesProducts;
 
-  @override
-  void initState() {
+ @override
+ void initState(){
+    BlocProvider.of<FavoritesCubit>(context).loadFavoriteProducts();
+    selectedCategory = null;
     super.initState();
-    filteredfavoritesProducts = favProducts;
-  }
+ }
 
   @override
   Widget build(BuildContext context) {
 
+    final cubit = BlocProvider.of<FavoritesCubit>(context);
+
       return Scaffold(
         body: Padding(
-          padding: const EdgeInsets.all(12.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
+            //crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SearchBarWidget(),
               const SizedBox(height: 16.0),
               SizedBox(
-                height: 70,
-                child: ListView.separated(
-                    itemCount: dummyCategories.length,
-                    scrollDirection: Axis.horizontal,
-                    separatorBuilder: (_, index) => const SizedBox(width: 10),
-                    itemBuilder: (context, index) {
-                      final dummyCategory = dummyCategories[index];
-                      return CategoryChipWidget(
-                        label: dummyCategory.name, 
-                        isSelected: selectedCategory == dummyCategory.name ? true : false,
-                        onTap:() {
-                         setState(() {
-                            // if the category is already selected, unselect it
-                            if (selectedCategory != null &&
-                                selectedCategory == dummyCategory.name) {
+                width: double.infinity,
+                child: Wrap(
+                direction: Axis.horizontal,
+                children: dummyCategories.map((category) {
+                  return Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Expanded(
+                          child: CategoryChipWidget(
+                             label: category.name, 
+                             isSelected: selectedCategory == category.name ? true : false,
+                             onTap: (){
+                              // if the category is already selected, unselect it
+                              if (selectedCategory != null && selectedCategory == category.name) {
                                 selectedCategory = null;
-                                filteredfavoritesProducts = favProducts;
+                                cubit.loadFavoriteProducts();
                               // if the category is not selected, select it
-                            } else {
-                              selectedCategory = dummyCategory.name;
-                              filteredfavoritesProducts = favProducts
-                                  .where((product) =>
-                                      product.category == selectedCategory)
-                                  .toList();
-                            }
-                          });
-                        }
-                      );
-                },
-               ),
+                              }else {
+                                selectedCategory = category.name;
+                                cubit.loadFilteredFavorites(selectedCategory!);
+                              } 
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                }).toList(),
+                ),
               ),
               const SizedBox(height: 16.0),
-              if (filteredfavoritesProducts.isNotEmpty)
               Expanded(
-                child: GridView.builder(
-                        itemCount: filteredfavoritesProducts.length,
-                        //shrinkWrap: true,
-                        //physics: const NeverScrollableScrollPhysics(),
+                child: BlocBuilder<FavoritesCubit, FavoritesState>(
+                  bloc: BlocProvider.of<FavoritesCubit>(context),
+                  builder: (context, state) {
+                    if(state is FavoriteLoadingState){
+                      return const CircularProgressIndicator.adaptive();
+                    }else if(state is FavoriteLoadedState){
+                      final products = state.products;
+                      return GridView.builder(
+                        itemCount: state.products.length,
                         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
-                          crossAxisSpacing: 20,
+                          crossAxisSpacing: 10,
                           mainAxisSpacing: 10,
-                          childAspectRatio: 1.5 /2,
+                          childAspectRatio: 2 / 2,
                         ),
                         itemBuilder: (context, index) => InkWell(
                           onTap: (){
-
+                            Navigator.of(context, rootNavigator: true).pushNamed(
+                              AppRoutes.productDetails,
+                              arguments: products[index],
+                            );
                           },
-                          child: ProductItem(productItem: filteredfavoritesProducts[index]),
+                          child: ProductItem(productItem: products[index]),
                           ),
-                  ), 
-              ), 
-              if (filteredfavoritesProducts.isEmpty)
-              const Center(
-                child: Text('No products found'),
+                      );
+                    }else{
+                      return const SizedBox();
+                    }
+                  }
+                ),
               ),
             ],
           ),

@@ -39,14 +39,16 @@ List<CategoryItemModel> dummyCategories =[
   ),
   CategoryItemModel(
     id: 5, 
-    name: 'Electronics',
-    imgUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0Mz9GR52aOkxbJE4ZMiENzTFuVz59XEZ8McMYAMHXfQZtGyZQBUzf7nIStr2qS5ifOw&usqp=CAU', 
-    productsCount: 170
-  ),
-  CategoryItemModel(
-    id: 6, 
     name: 'Hats',
     imgUrl: 'https://cms.cloudinary.vpsvc.com/images/c_scale,dpr_auto,f_auto,q_auto:best,t_productPageHeroGalleryTransformation,w_auto/legacy_dam/en-ie/s001208848/Standard-Embroidred-Hat-hero-001', 
     productsCount: 120
   ),
+  
+  CategoryItemModel(
+    id: 6, 
+    name: 'Electronics',
+    imgUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0Mz9GR52aOkxbJE4ZMiENzTFuVz59XEZ8McMYAMHXfQZtGyZQBUzf7nIStr2qS5ifOw&usqp=CAU', 
+    productsCount: 170
+  ),
+  
 ];
