@@ -19,21 +19,21 @@ class ProfileListTile extends StatelessWidget {
               leading:  Icon(
                 leadingIcon, 
                 size: 30,
-                color: AppColors.black,
+                color: title == 'Logout' ? AppColors.red : AppColors.black,
               ),
               title: Text(
                 title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: AppColors.black,
+                  color: title == 'Logout' ? AppColors.red : AppColors.black,
                   fontSize: 18,
                 ),
               ),
-              trailing: Icon(
+              trailing: title != 'Logout' ? const Icon(
                 Icons.arrow_forward_ios, 
-                color: title == 'Logout' ? AppColors.red : AppColors.black,
+                color: AppColors.black,
                 size: 18,
-              ),
+              ) : null,
             ),
      ),
    );

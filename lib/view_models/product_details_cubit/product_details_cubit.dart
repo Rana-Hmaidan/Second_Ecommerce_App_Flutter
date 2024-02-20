@@ -34,33 +34,60 @@ class ProductDetailsCubit extends Cubit<ProductDetailsState> {
     emit(QuantityChanged(counter));
   }
   
-  Future<void> decrement(String productId) async{
-    emit(QuantityCounterLoading());
-    try{
-      await Future.delayed(const Duration(seconds: 1));
-      final index = dummyProducts.indexWhere((item) => item.id == productId);
-      dummyProducts[index] = dummyProducts[index].copyWith(quantity: dummyProducts[index].quantity - 1);
-      emit(QuantityCounterLoaded(value: dummyProducts[index].quantity, productId: productId));
-      await Future.delayed(const Duration(seconds: 1));
-      emit( ProductDetailsLoaded( dummyProducts[index],));
-    } catch(e){
-       emit(AddToCartError(e.toString()));
-    }
-  }
-  Future<void> increment(String productId) async{
-    emit(QuantityCounterLoading());
-    try{
-      await Future.delayed(const Duration(seconds: 1));
+  // Future<void> decrement(String productId) async{
+  //   emit(QuantityCounterLoading());
+  //   try{
+  //     await Future.delayed(const Duration(seconds: 1));
+  //     final index = dummyProducts.indexWhere((item) => item.id == productId);
+  //     dummyProducts[index] = dummyProducts[index].copyWith(quantity: dummyProducts[index].quantity - 1);
+  //     emit(QuantityCounterLoaded(value: dummyProducts[index].quantity, productId: productId));
+  //     await Future.delayed(const Duration(seconds: 1));
+  //     emit( ProductDetailsLoaded( dummyProducts[index],));
+  //   } catch(e){
+  //      emit(AddToCartError(e.toString()));
+  //   }
+  // }
+  // Future<void> increment(String productId) async{
+  //   emit(QuantityCounterLoading());
+  //   try{
+  //     await Future.delayed(const Duration(seconds: 1));
+  //     final index = dummyProducts.indexWhere((item) => item.id == productId);
+  //     dummyProducts[index] = dummyProducts[index].copyWith(quantity: dummyProducts[index].quantity + 1);
+  //     emit(QuantityCounterLoaded(value: dummyProducts[index].quantity, productId: productId));
+  //     await Future.delayed(const Duration(seconds: 1));
+  //     emit( ProductDetailsLoaded( dummyProducts[index],));
+  //   } catch(e){
+  //      emit(AddToCartError(e.toString()));
+  //   }
+  // }
+
+  void increment(String productId){
+      emit(ProductDetailsLoading());
       final index = dummyProducts.indexWhere((item) => item.id == productId);
       dummyProducts[index] = dummyProducts[index].copyWith(quantity: dummyProducts[index].quantity + 1);
       emit(QuantityCounterLoaded(value: dummyProducts[index].quantity, productId: productId));
-      await Future.delayed(const Duration(seconds: 1));
-      emit( ProductDetailsLoaded( dummyProducts[index],));
-    } catch(e){
-       emit(AddToCartError(e.toString()));
-    }
+      Future.delayed(const Duration(seconds: 1),(){
+      emit(
+        ProductDetailsLoaded(
+          dummyProducts[index],
+        ));
+    });
   }
+  
+  void decrement(String productId){
+    emit(ProductDetailsLoading());
+     final index = dummyProducts.indexWhere((item) => item.id == productId);
+      dummyProducts[index] = dummyProducts[index].copyWith(quantity: dummyProducts[index].quantity - 1);
+      emit(QuantityCounterLoaded(value: dummyProducts[index].quantity, productId: productId));
 
+      Future.delayed(const Duration(seconds: 1),(){
+      emit(
+        ProductDetailsLoaded(
+          dummyProducts[index],
+        ));
+    });
+  }
+  
   void changeSize(ProductSize value) {
     size = value;
     emit(SizeChanged(size!));

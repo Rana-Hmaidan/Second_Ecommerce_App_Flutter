@@ -1,10 +1,181 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:second_ecommerce_app_flutter/models/user_model.dart';
+import 'package:second_ecommerce_app_flutter/utils/app_colors.dart';
+import 'package:second_ecommerce_app_flutter/view_models/profile_cubit/profile_cubit.dart';
+import 'package:second_ecommerce_app_flutter/views/widgets/social_item.dart';
 
-class EditProfilePage extends StatelessWidget {
+class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key});
 
   @override
+  State<EditProfilePage> createState() => _EditProfilePageState();
+}
+
+class _EditProfilePageState extends State<EditProfilePage> {
+
+  late final GlobalKey<FormState> _formKey;
+  late final TextEditingController _userNameController, _emailController;
+  late FocusNode _userNameFocusNode,_emailFocusNode;
+  String? _userName ,_email;
+
+  @override
+  void initState(){
+    _formKey = GlobalKey<FormState>();
+    _emailController = TextEditingController();
+    _userNameController = TextEditingController();
+    _emailFocusNode = FocusNode();
+    _userNameFocusNode = FocusNode();
+    super.initState();
+  }
+
+   @override
+  void dispose(){
+    _emailController.dispose();
+    _userNameController.dispose();
+    super.dispose();
+  }
+
+  Future<void> editProfile() async {
+    if (_formKey.currentState!.validate()) {
+      await BlocProvider.of<ProfileCubit>(context).EditProfile(
+        _emailController.text,
+        _userNameController.text,
+      );
+    }
+  }
+  @override
   Widget build(BuildContext context) {
-    return const Center(child: Text('Edit Profile Page'),);
+
+    final size = MediaQuery.of(context).size;
+    final user = ModalRoute.of(context)!.settings.arguments as User;
+
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            const SizedBox(height: 24.0,),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(size.width > 800 ? size.height * 0.2 :size.height * 0.1),
+              child: CachedNetworkImage(
+                imageUrl: user.imgUrl,
+                fit: BoxFit.cover,
+                placeholder: (context, url) => const Center(
+                  child: CircularProgressIndicator.adaptive(),
+                ),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
+              ),
+            ),
+            const SizedBox(height: 16.0,),
+            Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Username',
+                    style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 24.0,),
+                  TextFormField(
+                    controller: _userNameController,
+                    onChanged: (value) => _userName = value,
+                    keyboardType: TextInputType.name,
+                    focusNode: _userNameFocusNode,
+                    textInputAction: TextInputAction.next,
+                    onEditingComplete: (){
+                      _userNameFocusNode.unfocus();
+                      FocusScope.of(context).requestFocus(_emailFocusNode);
+                    },
+                    validator: (value){
+                      if(value == null || value.isEmpty){
+                        return 'Please enter your username';
+                      }else if(value.length < 3){
+                        return 'Username must be at least 3 characters';
+                      }else{
+                        return null;
+                      }
+                    },
+                    decoration: InputDecoration(
+                      hintText: user.userName,
+                      prefixIcon: const Icon(Icons.person_outline),
+                      prefixIconColor: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                  const SizedBox(height: 36.0,),
+                  Text(
+                    'Email',
+                    style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 12.0,),
+                  TextFormField(
+                    controller: _emailController,
+                    onChanged: (value) => _email = value,
+                    keyboardType: TextInputType.emailAddress,
+                    focusNode: _emailFocusNode,
+                    textInputAction: TextInputAction.next,
+                    onEditingComplete: (){
+                      _emailFocusNode.unfocus();
+                      editProfile();
+                    },
+                    validator: (value){
+                      if(value == null || value.isEmpty){
+                        return 'Please enter your email';
+                      }else if(!value.contains('@')){
+                        return 'Please enter a valid email';
+                      }else{
+                        return null;
+                      }
+                    },
+                    decoration: InputDecoration(
+                      hintText: user.email,
+                      prefixIcon:  const Icon(Icons.email),
+                      prefixIconColor: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                  const SizedBox(height: 36.0,),
+                  Text(
+                    'Account Linked With',
+                    style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 12.0,),
+                  SocialItem(
+                      icon: FontAwesomeIcons.google,
+                      title: 'Google',
+                      color: AppColors.red,
+                      actionIcon: Icons.link,
+                      onTap: (){},
+                  ),
+                  const SizedBox(height: 36.0,),
+                  ElevatedButton(
+                    onPressed: editProfile,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).primaryColor,
+                      foregroundColor: AppColors.white,
+                    ),
+                    child: Text(
+                        'Save Changes',
+                        style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                            color: AppColors.white,
+                            fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+        
+          ],
+        ),
+      ),
+    );
   }
 }

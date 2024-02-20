@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:second_ecommerce_app_flutter/models/user_model.dart';
 import 'package:second_ecommerce_app_flutter/utils/route/app_routes.dart';
 import 'package:second_ecommerce_app_flutter/views/widgets/profile_list_tile.dart';
 
@@ -14,21 +15,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     //final size = MediaQuery.of(context).size;
     return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Settings'),
-          centerTitle: true,
-          actions: [
-            Padding(
-                padding: const EdgeInsetsDirectional.only(end: 8.0),
-                child: IconButton(
-                  onPressed: (){}, 
-                  icon: const Icon(Icons.list),
-                ),
-              ),
-          ],
-        ),
-        body: SingleChildScrollView(
+      child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -47,6 +34,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     onTapItem: (){
                       Navigator.of(context, rootNavigator: true).pushNamed(
                         AppRoutes.editProfile,
+                        arguments: dummyUsers.first
                       );
                     },
                   ),
@@ -97,7 +85,6 @@ class _ProfilePageState extends State<ProfilePage> {
               ],
             ),
           ),
-        ),
       ),
     );
   }

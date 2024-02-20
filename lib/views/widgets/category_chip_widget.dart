@@ -16,7 +16,7 @@ class CategoryChipWidget extends StatelessWidget {
       labelStyle: TextStyle(
         color: isSelected? AppColors.white : AppColors.black87,
       ),
-      selected: isSelected,
+      selected: isSelected? true : false,
       selectedColor: AppColors.primary,
       onPressed: onTap,
       showCheckmark: false,

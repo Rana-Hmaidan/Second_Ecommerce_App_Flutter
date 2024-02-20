@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:second_ecommerce_app_flutter/models/product_item_model.dart';
+import 'package:second_ecommerce_app_flutter/models/user_model.dart';
 import 'package:second_ecommerce_app_flutter/utils/route/app_routes.dart';
 import 'package:second_ecommerce_app_flutter/view_models/product_details_cubit/product_details_cubit.dart';
 import 'package:second_ecommerce_app_flutter/view_models/profile_cubit/profile_cubit.dart';
@@ -26,9 +27,14 @@ class AppRouter {
           settings: settings,
         );
       case AppRoutes.editProfile:
+      final user = settings.arguments as User;
         return MaterialPageRoute(
          builder: (_) => BlocProvider(
-            create: (context) => ProfileCubit(),
+            create: (context){
+              final cubit = ProfileCubit();
+              cubit.getUserDetails(user.id);
+              return cubit;
+            },
             child: const EditProfilePage()
           ),
           settings: settings,

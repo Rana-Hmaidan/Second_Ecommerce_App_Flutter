@@ -21,7 +21,8 @@ class ProductDetailsPage extends StatelessWidget {
       buildWhen: (previous, current) =>
           current is ProductDetailsLoaded ||
           current is ProductDetailsError ||
-          current is ProductDetailsLoading,
+          current is ProductDetailsLoading || 
+          current is QuantityCounterLoading,
       builder: (context, state) {
         if (state is ProductDetailsLoading) {
           return const Scaffold(
@@ -87,12 +88,9 @@ class ProductDetailsPage extends StatelessWidget {
                                 children: [
                                   Text(
                                     product.name,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleLarge!
-                                        .copyWith(
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                    style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                   Row(
                                     children: [
@@ -103,48 +101,35 @@ class ProductDetailsPage extends StatelessWidget {
                                       const SizedBox(width: 6),
                                       Text(
                                         product.averageRate.toString(),
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .labelLarge!
-                                            .copyWith(
-                                              fontWeight: FontWeight.bold,
-                                            ),
+                                        style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ],
                                   ),
                                 ],
                               ),
-                              BlocBuilder<ProductDetailsCubit, ProductDetailsState>(
-                                bloc: cubit,
-                                buildWhen: (previous, current) => current is QuantityCounterLoaded,
-                                builder: (context, state) {
-                                  if (state is QuantityCounterLoaded) {
-                                    final counter = product.quantity;
-                                    return CounterWidget(
-                                      cubit: cubit,
-                                      counter: counter ,
-                                      productItem: product,
-                                    );
-                                  } else {
-                                    return CounterWidget(
-                                      cubit: cubit,
-                                      counter: 1,
-                                      productItem: product,
-                                    );
-                                  }
-                                },
-                              ),
+                              if (state is QuantityCounterLoaded)...[
+                                  CounterWidget(
+                                    cubit: cubit,
+                                    counter: product.quantity ,
+                                    productItem: product,
+                                  ),
+                              ]else ...[
+                                  CounterWidget(
+                                    cubit: cubit,
+                                    counter: 1,
+                                    productItem: product,
+                                  ),
+                                ],
                             ],
                           ),
                           const SizedBox(height: 14),
                           Text(
                             'Size',
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleMedium!
-                                .copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                            style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                           const SizedBox(height: 8),
                           Row(
@@ -167,16 +152,12 @@ class ProductDetailsPage extends StatelessWidget {
                                               child: Center(
                                                 child: Text(
                                                   size.name,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .labelMedium!
-                                                      .copyWith(
-                                                        fontWeight:
-                                                            FontWeight.bold,
+                                                  style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                                                        fontWeight: FontWeight.bold,
                                                         color: selectedSize == size
                                                             ? AppColors.white
                                                             : null,
-                                                      ),
+                                                  ),
                                                 ),
                                               ),
                                             ),
@@ -184,9 +165,7 @@ class ProductDetailsPage extends StatelessWidget {
                                         );
                                       } else {
                                         return Padding(
-                                          padding:
-                                              const EdgeInsetsDirectional.only(
-                                                  end: 8.0),
+                                          padding: const EdgeInsetsDirectional.only(end: 8.0),
                                           child: InkWell(
                                             onTap: () => cubit.changeSize(size),
                                             child: CircleAvatar(
@@ -195,13 +174,9 @@ class ProductDetailsPage extends StatelessWidget {
                                               child: Center(
                                                 child: Text(
                                                   size.name,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .labelMedium!
-                                                      .copyWith(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
+                                                  style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
                                                 ),
                                               ),
                                             ),
@@ -216,45 +191,34 @@ class ProductDetailsPage extends StatelessWidget {
                           const SizedBox(height: 16),
                           Text(
                             'Details',
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleMedium!
-                                .copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                            style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                           const SizedBox(height: 8),
                           Text(
                             product.description,
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelLarge!
-                                .copyWith(
-                                  color: AppColors.grey,
-                                ),
-                              maxLines: 5,
+                            style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                              color: AppColors.grey,
+                            ),
+                            maxLines: 5,
                           ),
                           const Spacer(),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                '\$${(product.price * product.quantity).toStringAsFixed(2)}',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headlineSmall!
-                                    .copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: AppColors.primary,
-                                    ),
+                                '\$ ${(product.price * product.quantity).toStringAsFixed(2)}',
+                                style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.primary,
+                                ),
                               ),
                               SizedBox(
                                 height: 50,
-                                child: BlocConsumer<ProductDetailsCubit,
-                                    ProductDetailsState>(
+                                child: BlocConsumer<ProductDetailsCubit, ProductDetailsState>(
                                   bloc: cubit,
-                                  listenWhen: (previous, current) =>
-                                      current is AddToCartError,
+                                  listenWhen: (previous, current) => current is AddToCartError,
                                   listener: (context, state) {
                                     if (state is AddToCartError) {
                                       showDialog(
@@ -298,8 +262,7 @@ class ProductDetailsPage extends StatelessWidget {
                                             backgroundColor: AppColors.primary,
                                             foregroundColor: AppColors.white,
                                             shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(16))),
+                                                borderRadius: BorderRadius.circular(16))),
                                         child: const Text('Added'),
                                       );
                                     } else {
@@ -309,8 +272,8 @@ class ProductDetailsPage extends StatelessWidget {
                                             backgroundColor: AppColors.primary,
                                             foregroundColor: AppColors.white,
                                             shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(16))),
+                                                borderRadius: BorderRadius.circular(16))
+                                            ),
                                         child: const Text('Add to Order'),
                                       );
                                     }

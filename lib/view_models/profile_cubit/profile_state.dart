@@ -9,8 +9,13 @@ final class ProfileLoading extends ProfileState {}
 final class EditProfileLoading extends ProfileState {}
 
 final class EditProfileLoaded extends ProfileState {
-  UserModel user;
+  User user;
   EditProfileLoaded(this.user);
+}
+
+final class EditProfileError extends ProfileState {
+  final String message;
+  EditProfileError(this.message);
 }
 
 final class ProfileError extends ProfileState {
