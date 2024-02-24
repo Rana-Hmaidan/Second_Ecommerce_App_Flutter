@@ -35,7 +35,7 @@ class CategoryItem extends StatelessWidget {
             ),
           ),
          Align(
-            alignment: (categoryItem.id % 2) == 0 ? Alignment.centerRight: Alignment.centerLeft,
+            alignment: ((categoryItem.id as int) % 2) == 0 ? Alignment.centerRight: Alignment.centerLeft,
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: GlassContainer(

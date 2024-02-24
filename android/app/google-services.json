@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "106624480964",
+    "project_id": "sky-ecommerce-app-36479",
+    "storage_bucket": "sky-ecommerce-app-36479.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:106624480964:android:f5077c63512cd87809bb91",
+        "android_client_info": {
+          "package_name": "com.example.second_ecommerce_app_flutter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBM0u4gyHlNNXF6VTv2AsdHpqecjvPmygc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

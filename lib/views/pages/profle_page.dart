@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:second_ecommerce_app_flutter/models/user_model.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:second_ecommerce_app_flutter/models/user_data.dart';
 import 'package:second_ecommerce_app_flutter/utils/route/app_routes.dart';
+import 'package:second_ecommerce_app_flutter/view_models/profile_cubit/profile_cubit.dart';
 import 'package:second_ecommerce_app_flutter/views/widgets/profile_list_tile.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -14,6 +16,8 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     //final size = MediaQuery.of(context).size;
+    final user = ModalRoute.of(context)!.settings.arguments as UserData;
+
     return SafeArea(
       child: SingleChildScrollView(
           child: Padding(
@@ -34,7 +38,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     onTapItem: (){
                       Navigator.of(context, rootNavigator: true).pushNamed(
                         AppRoutes.editProfile,
-                        arguments: dummyUsers.first
+                        arguments: user.id,
                       );
                     },
                   ),

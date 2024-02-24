@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:second_ecommerce_app_flutter/firebase_options.dart';
 import 'package:second_ecommerce_app_flutter/utils/app_theme.dart';
 import 'package:second_ecommerce_app_flutter/utils/route/app_router.dart';
 import 'package:second_ecommerce_app_flutter/utils/route/app_routes.dart';
+//import 'package:second_ecommerce_app_flutter/firebase_options.dart';
+import 'package:second_ecommerce_app_flutter/view_models/auth_cubit/auth_cubit.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -13,12 +22,30 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'E-Commerce App',
-      theme: AppTheme.lightTheme(),
-      debugShowCheckedModeBanner: false,
-      initialRoute: AppRoutes.bottomNavbar,
-      onGenerateRoute: AppRouter.onGenerateRoute,
+    return BlocProvider(
+      create: (context) {
+        final cubit = AuthCubit();
+        cubit.getCurrentUser();
+        return cubit;
+      },
+      child: Builder(builder: (context) {
+        final cubit = BlocProvider.of<AuthCubit>(context);
+        return BlocBuilder<AuthCubit, AuthState>(
+          bloc: cubit,
+          buildWhen: (previous, current) =>
+              current is AuthInitial || current is AuthSuccess,
+          builder: (context, state) {
+            return MaterialApp(
+              title: 'E-Commerce App',
+              theme: AppTheme.lightTheme(),
+              initialRoute: state is AuthSuccess
+                  ? AppRoutes.bottomNavbar
+                  : AppRoutes.homeLogin,
+              onGenerateRoute: AppRouter.onGenerateRoute,
+            );
+          },
+        );
+      }),
     );
   }
 }

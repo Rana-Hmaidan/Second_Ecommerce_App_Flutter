@@ -9,7 +9,7 @@ final class ProfileLoading extends ProfileState {}
 final class EditProfileLoading extends ProfileState {}
 
 final class EditProfileLoaded extends ProfileState {
-  User user;
+  UserData user;
   EditProfileLoaded(this.user);
 }
 

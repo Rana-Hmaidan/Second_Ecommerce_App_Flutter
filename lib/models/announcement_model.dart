@@ -3,6 +3,24 @@ class AnnouncementModel {
   final String imgUrl;
 
   AnnouncementModel({required this.id, required this.imgUrl});
+
+  Map<String, dynamic> toMap() {
+    final result = <String, dynamic>{};
+    
+    result.addAll({'id': id});
+    result.addAll({'imgUrl': imgUrl});
+
+    return result;
+  }
+
+  factory AnnouncementModel.fromMap(
+    Map<String, dynamic> map, String documentId) {
+
+    return AnnouncementModel(
+      id: documentId,
+      imgUrl: map['imgUrl'] ?? '',
+    );
+  }
 }
 
 List<AnnouncementModel> dummyAnnouncements = [
