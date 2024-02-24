@@ -1,8 +1,6 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:second_ecommerce_app_flutter/models/category_item_model.dart';
-import 'package:second_ecommerce_app_flutter/shared/widget_extension.dart';
 import 'package:second_ecommerce_app_flutter/utils/route/app_routes.dart';
 import 'package:second_ecommerce_app_flutter/view_models/favorites_cubit/favorites_cubit.dart';
 import 'package:second_ecommerce_app_flutter/views/widgets/category_chip_widget.dart';

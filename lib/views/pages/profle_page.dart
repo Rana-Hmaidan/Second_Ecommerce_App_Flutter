@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:second_ecommerce_app_flutter/models/user_data.dart';
 import 'package:second_ecommerce_app_flutter/utils/route/app_routes.dart';
-import 'package:second_ecommerce_app_flutter/view_models/profile_cubit/profile_cubit.dart';
 import 'package:second_ecommerce_app_flutter/views/widgets/profile_list_tile.dart';
 
 class ProfilePage extends StatefulWidget {

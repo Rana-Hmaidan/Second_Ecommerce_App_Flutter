@@ -7,7 +7,7 @@ import 'package:second_ecommerce_app_flutter/view_models/product_details_cubit/p
 import 'package:second_ecommerce_app_flutter/view_models/profile_cubit/profile_cubit.dart';
 import 'package:second_ecommerce_app_flutter/views/pages/create_account_page.dart';
 import 'package:second_ecommerce_app_flutter/views/pages/custom_bottom_navbar.dart';
-import 'package:second_ecommerce_app_flutter/views/pages/edit-profile-page.dart';
+import 'package:second_ecommerce_app_flutter/views/pages/edit_profile_page.dart';
 import 'package:second_ecommerce_app_flutter/views/pages/login_page.dart';
 import 'package:second_ecommerce_app_flutter/views/pages/product_details_page.dart';
 import 'package:second_ecommerce_app_flutter/view_models/favorites_cubit/favorites_cubit.dart';

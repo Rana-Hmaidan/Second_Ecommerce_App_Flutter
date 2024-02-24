@@ -15,7 +15,7 @@ class SocialItem extends StatelessWidget {
     required this.title, 
     required this.onTap, 
     required this.color, 
-    this.actionIcon = null,
+    this.actionIcon,
   });
 
   @override

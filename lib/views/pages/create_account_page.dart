@@ -1,6 +1,5 @@
 import 'package:second_ecommerce_app_flutter/utils/app_colors.dart';
 import 'package:second_ecommerce_app_flutter/views/widgets/create_account_form.dart';
-import 'package:second_ecommerce_app_flutter/views/widgets/login_form.dart';
 import 'package:flutter/material.dart';
 
 class CreateAccountPage extends StatelessWidget {
