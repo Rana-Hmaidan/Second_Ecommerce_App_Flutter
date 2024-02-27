@@ -53,12 +53,14 @@ class AuthServicesImpl implements AuthServices {
     );
 
     if (userCredential.user != null) {
+
       final currentUserData = UserData(
       id: userCredential.user!.uid,
       email: email,
       username: username, 
       password: password,
       );
+      
       await firestore.setData(
         path: ApiPaths.user(currentUserData.id),
         data: currentUserData.toMap(),

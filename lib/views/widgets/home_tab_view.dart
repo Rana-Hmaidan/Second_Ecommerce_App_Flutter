@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:second_ecommerce_app_flutter/models/announcement_model.dart';
 import 'package:second_ecommerce_app_flutter/models/product_item_model.dart';
 import 'package:second_ecommerce_app_flutter/utils/route/app_routes.dart';
 import 'package:second_ecommerce_app_flutter/view_models/home_cubit/home_cubit.dart';
@@ -12,9 +13,14 @@ class HomeTabView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cubit = BlocProvider.of<HomeCubit>(context);
+    
     for(final product in dummyProducts){
       cubit.addProduct(product);
     }
+    for(final announcement in dummyAnnouncements){
+      cubit.addAnnouncement(announcement);
+    }
+
     return BlocBuilder<HomeCubit, HomeState>(
       bloc: cubit,
       buildWhen: (previous, current) =>
@@ -48,8 +54,8 @@ class HomeTabView extends StatelessWidget {
                     Text(
                       'New Arrivals',
                       style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     TextButton(
                       onPressed: () {},

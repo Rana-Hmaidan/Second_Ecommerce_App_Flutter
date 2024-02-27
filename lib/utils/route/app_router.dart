@@ -43,10 +43,7 @@ class AppRouter {
         );
       case AppRoutes.bottomNavbar:
         return MaterialPageRoute(
-         builder: (_) => BlocProvider(
-            create: (context) => FavoritesCubit(),
-            child: const CustomBottomNavbar()
-          ),
+         builder: (_) => const CustomBottomNavbar(),
           settings: settings,
         );
       case AppRoutes.homeLogin:

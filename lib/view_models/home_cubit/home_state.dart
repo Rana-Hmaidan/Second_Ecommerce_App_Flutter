@@ -12,6 +12,16 @@ final class HomeLoaded extends HomeState {
   HomeLoaded(this.products, this.announcements);
 }
 
+final class AddingToFavorites extends HomeState {}
+
+final class AddedToFavorites extends HomeState {}
+
+final class AddToFavoritesError extends HomeState {
+  final String message;
+
+  AddToFavoritesError(this.message);
+}
+
 final class HomeError extends HomeState {
   final String message;
   HomeError(this.message);

@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:second_ecommerce_app_flutter/models/product_item_model.dart';
+import 'package:second_ecommerce_app_flutter/models/cart_orders_model.dart';
+//import 'package:second_ecommerce_app_flutter/models/product_item_model.dart';
 import 'package:second_ecommerce_app_flutter/utils/app_colors.dart';
 
 class CounterWidget extends StatelessWidget {
   final dynamic cubit;
-  final int counter;
-  final ProductItemModel productItem;
-
+  final int? counter;
+  final CartOrdersModel? cartOrder;
+  final bool isLoading;
   const CounterWidget({
     super.key,
-    required this.cubit,
-    required this.counter, 
-    required this.productItem,
+    this.cubit,
+    this.counter,
+    this.cartOrder,
+    this.isLoading = false,
   });
 
   @override
@@ -21,11 +23,12 @@ class CounterWidget extends StatelessWidget {
         color: AppColors.grey2,
         borderRadius: BorderRadius.circular(16),
       ),
-      child: Row(
+      child: isLoading ? const CircularProgressIndicator.adaptive() : Row(
         children: [
           IconButton(
-            onPressed: () async => await cubit.decrement(productItem.id),
-            //async => await cubit.decrementCounter(),
+            onPressed: () async => cartOrder != null
+                ? await cubit.decrementCounter(cartOrder)
+                : await cubit.decrementCounter(),
             icon: const Icon(Icons.remove),
           ),
           const SizedBox(width: 8),
@@ -35,7 +38,9 @@ class CounterWidget extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           IconButton(
-            onPressed: () async => await cubit.increment(productItem.id),
+            onPressed: () async => cartOrder != null
+                ? await cubit.incrementCounter(cartOrder)
+                : await cubit.incrementCounter(),
             icon: const Icon(Icons.add),
           ),
         ],

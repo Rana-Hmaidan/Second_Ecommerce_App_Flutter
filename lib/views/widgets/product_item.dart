@@ -3,15 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:second_ecommerce_app_flutter/models/product_item_model.dart';
 import 'package:second_ecommerce_app_flutter/utils/app_colors.dart';
-import 'package:second_ecommerce_app_flutter/view_models/favorites_cubit/favorites_cubit.dart';
+//import 'package:second_ecommerce_app_flutter/view_models/favorites_cubit/favorites_cubit.dart';
+import 'package:second_ecommerce_app_flutter/view_models/home_cubit/home_cubit.dart';
 
 class ProductItem extends StatelessWidget {
 
   final ProductItemModel productItem;
+  
   const ProductItem({super.key, required this.productItem});
 
   @override
   Widget build(BuildContext context) {
+
+    final cubit = BlocProvider.of<HomeCubit>(context);
+
     return Column(
       children: [
         Stack(
@@ -43,26 +48,54 @@ class ProductItem extends StatelessWidget {
                   shape: BoxShape.circle,
                   color: Colors.white54,
                 ),
-                child: BlocBuilder<FavoritesCubit, FavoritesState>(
+                child: BlocBuilder<HomeCubit, HomeState>(
+                  bloc: cubit,
+                  buildWhen: (previous, current) =>
+                    current is AddingToFavorites ||
+                    current is AddedToFavorites ||
+                    current is AddToFavoritesError,
                   builder: (context, state) {
-                    final isFavorite = BlocProvider.of<FavoritesCubit>(context).favoriteProducts[productItem.id] ?? false;
-                    final isLoading = BlocProvider.of<FavoritesCubit>(context).loadingProducts[productItem.id] ?? false;
-
-                    return IconButton(
-                      onPressed: (){
-                        if(isFavorite){
-                           BlocProvider.of<FavoritesCubit>(context).deleteFavorite(productItem.id);
-                        }else{
-                          BlocProvider.of<FavoritesCubit>(context).addFavorite(productItem.id);
-                        }
-                      },
-                      icon: isLoading? const CircularProgressIndicator.adaptive() :  Icon(
-                        isFavorite? Icons.favorite : Icons.favorite_border,
-                        color: isFavorite? AppColors.red : null,
-                      ),
-                    );
+                    if(state is AddingToFavorites){
+                      return const CircularProgressIndicator.adaptive();
+                    } else if(state is AddedToFavorites){
+                      return IconButton(
+                        onPressed: () async => await cubit.removeFromFavorites(productItem.id),
+                        icon: const Icon(
+                          Icons.favorite,
+                          color: AppColors.red,
+                        ),
+                      );
+                    } else{
+                      return IconButton(
+                        onPressed: () async => await cubit.addToFavorites(productItem.id),
+                        icon: const Icon(
+                          Icons.favorite_border,
+                          color: AppColors.red,
+                        ),
+                      );
+                    }
                   },
                 ),
+                // BlocBuilder<FavoritesCubit, FavoritesState>(
+                //   builder: (context, state) {
+                //     final isFavorite = BlocProvider.of<FavoritesCubit>(context).favoriteProducts[productItem.id] ?? false;
+                //     final isLoading = BlocProvider.of<FavoritesCubit>(context).loadingProducts[productItem.id] ?? false;
+
+                //     return IconButton(
+                //       onPressed: (){
+                //         if(isFavorite){
+                //            BlocProvider.of<FavoritesCubit>(context).deleteFavorite(productItem.id);
+                //         }else{
+                //           BlocProvider.of<FavoritesCubit>(context).addFavorite(productItem.id);
+                //         }
+                //       },
+                //       icon: isLoading? const CircularProgressIndicator.adaptive() :  Icon(
+                //         isFavorite? Icons.favorite : Icons.favorite_border,
+                //         color: isFavorite? AppColors.red : null,
+                //       ),
+                //     );
+                //   },
+                // ),
               ),
             ),
           ],

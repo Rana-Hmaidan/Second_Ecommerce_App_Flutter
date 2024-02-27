@@ -28,28 +28,20 @@ final class AddToCartError extends ProductDetailsState {
   AddToCartError(this.message);
 }
 
+final class AddingToFavorites extends ProductDetailsState {}
+
+final class AddedToFavorites extends ProductDetailsState {}
+
+final class AddToFavoritesError extends ProductDetailsState {
+  final String message;
+
+  AddToFavoritesError(this.message);
+}
+
 final class QuantityChanged extends ProductDetailsState {
   final int quantity;
 
   QuantityChanged(this.quantity);
-}
-
-final class QuantityCounterLoading extends ProductDetailsState{}
-
-final class QuantityCounterLoaded extends ProductDetailsState{
-  final int value;
-  final String productId;
-  
-  QuantityCounterLoaded({
-    required this.value,
-    required this.productId,
-  });
-}
-
-final class QuantityCounterError extends ProductDetailsState {
-  final String message;
-
-  QuantityCounterError(this.message);
 }
 
 final class SizeChanged extends ProductDetailsState {
@@ -57,3 +49,21 @@ final class SizeChanged extends ProductDetailsState {
 
   SizeChanged(this.size);
 }
+
+// final class QuantityCounterLoading extends ProductDetailsState{}
+
+// final class QuantityCounterLoaded extends ProductDetailsState{
+//   final int value;
+//   final String productId;
+  
+//   QuantityCounterLoaded({
+//     required this.value,
+//     required this.productId,
+//   });
+// }
+
+// final class QuantityCounterError extends ProductDetailsState {
+//   final String message;
+
+//   QuantityCounterError(this.message);
+// }

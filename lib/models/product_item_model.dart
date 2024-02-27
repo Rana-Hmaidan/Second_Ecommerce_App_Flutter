@@ -3,6 +3,21 @@ enum ProductSize {
   M,
   L,
   XL,
+  XXL;
+
+  static ProductSize fromString(String size) {
+    if (size == ProductSize.S.name) {
+      return ProductSize.S;
+    } else if (size == ProductSize.M.name) {
+      return ProductSize.M;
+    } else if (size == ProductSize.L.name) {
+      return ProductSize.L;
+    } else if (size == ProductSize.XL.name) {
+      return ProductSize.XL;
+    } else {
+      return ProductSize.XXL;
+    }
+  }
 }
 
 class ProductItemModel {

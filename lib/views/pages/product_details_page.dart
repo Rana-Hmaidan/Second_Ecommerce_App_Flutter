@@ -21,8 +21,7 @@ class ProductDetailsPage extends StatelessWidget {
       buildWhen: (previous, current) =>
           current is ProductDetailsLoaded ||
           current is ProductDetailsError ||
-          current is ProductDetailsLoading || 
-          current is QuantityCounterLoading,
+          current is ProductDetailsLoading,
       builder: (context, state) {
         if (state is ProductDetailsLoading) {
           return const Scaffold(
@@ -43,10 +42,33 @@ class ProductDetailsPage extends StatelessWidget {
             appBar: AppBar(
               backgroundColor: AppColors.transparent,
               actions: [
-                IconButton(
-                  onPressed: () async => await cubit.addToFavorites(product.id),
-                  icon: Icon(product.isFavorite == false? Icons.favorite_border : Icons.favorite),
-                  color: AppColors.red,
+                BlocBuilder<ProductDetailsCubit, ProductDetailsState>(
+                  bloc: cubit,
+                  buildWhen: (previous, current) =>
+                    current is AddingToFavorites ||
+                    current is AddedToFavorites ||
+                    current is AddToFavoritesError,
+                  builder: (context, state) {
+                    if(state is AddingToFavorites){
+                      return const CircularProgressIndicator.adaptive();
+                    } else if(state is AddedToFavorites){
+                      return IconButton(
+                        onPressed: () async => await cubit.removeFromFavorites(product.id),
+                        icon: const Icon(
+                          Icons.favorite,
+                          color: AppColors.red,
+                        ),
+                      );
+                    } else{ 
+                      return IconButton(
+                        onPressed: () async => await cubit.addToFavorites(product.id),
+                        icon: const Icon(
+                          Icons.favorite_border,
+                          color: AppColors.red,
+                        ),
+                      );
+                    }
+                  }
                 ),
               ],
             ),
@@ -67,10 +89,10 @@ class ProductDetailsPage extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: size.height * 0.38),
+                    padding: EdgeInsets.only(top: size.height * 0.48),
                     child: Container(
                       width: double.infinity,
-                      padding: const EdgeInsets.all(25),
+                      padding: const EdgeInsets.all(30),
                       decoration: const BoxDecoration(
                         color: AppColors.white,
                         borderRadius: BorderRadius.vertical(
@@ -109,32 +131,37 @@ class ProductDetailsPage extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                              if (state is QuantityCounterLoaded)...[
-                                  CounterWidget(
-                                    cubit: cubit,
-                                    counter: product.quantity ,
-                                    productItem: product,
-                                  ),
-                              ]else ...[
-                                  CounterWidget(
-                                    cubit: cubit,
-                                    counter: 1,
-                                    productItem: product,
-                                  ),
-                                ],
+                              BlocBuilder<ProductDetailsCubit, ProductDetailsState>(
+                                bloc: cubit,
+                                buildWhen: (previous, current) => current is QuantityChanged,
+                                builder: (context, state) {
+                                  if (state is QuantityChanged) {
+                                    final counter = state.quantity;
+                                    return CounterWidget(
+                                      cubit: cubit,
+                                      counter: counter,
+                                    );
+                                  } else {
+                                    return CounterWidget(
+                                      cubit: cubit,
+                                      counter: 1,
+                                    );
+                                  }
+                                },
+                              ),
                             ],
                           ),
-                          const SizedBox(height: 14),
+                          const SizedBox(height: 16),
                           Text(
                             'Size',
                             style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                              fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.bold,
                             ),
                           ),
                           const SizedBox(height: 8),
                           Row(
-                            children: ProductSize.values
-                                .map( (size) => BlocBuilder<ProductDetailsCubit, ProductDetailsState>(
+                            children: ProductSize.values.map( 
+                                  (size) => BlocBuilder<ProductDetailsCubit, ProductDetailsState>(
                                     bloc: cubit,
                                     buildWhen: (previous, current) => current is SizeChanged,
                                     builder: (context, state) {
@@ -157,7 +184,7 @@ class ProductDetailsPage extends StatelessWidget {
                                                         color: selectedSize == size
                                                             ? AppColors.white
                                                             : null,
-                                                  ),
+                                                      ),
                                                 ),
                                               ),
                                             ),
@@ -191,9 +218,12 @@ class ProductDetailsPage extends StatelessWidget {
                           const SizedBox(height: 16),
                           Text(
                             'Details',
-                            style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium!
+                                .copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
                           ),
                           const SizedBox(height: 8),
                           Text(
@@ -201,17 +231,16 @@ class ProductDetailsPage extends StatelessWidget {
                             style: Theme.of(context).textTheme.labelLarge!.copyWith(
                               color: AppColors.grey,
                             ),
-                            maxLines: 5,
                           ),
                           const Spacer(),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                '\$ ${(product.price * product.quantity).toStringAsFixed(2)}',
+                                '\$${product.price}',
                                 style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.primary,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.primary,
                                 ),
                               ),
                               SizedBox(
@@ -250,8 +279,7 @@ class ProductDetailsPage extends StatelessWidget {
                                             backgroundColor: AppColors.primary,
                                             foregroundColor: AppColors.white,
                                             shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                  BorderRadius.circular(16))),
+                                                borderRadius: BorderRadius.circular(16))),
                                         child: const CircularProgressIndicator
                                             .adaptive(),
                                       );
@@ -262,7 +290,7 @@ class ProductDetailsPage extends StatelessWidget {
                                             backgroundColor: AppColors.primary,
                                             foregroundColor: AppColors.white,
                                             shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(16))),
+                                              borderRadius: BorderRadius.circular(16))),
                                         child: const Text('Added'),
                                       );
                                     } else {
@@ -272,8 +300,7 @@ class ProductDetailsPage extends StatelessWidget {
                                             backgroundColor: AppColors.primary,
                                             foregroundColor: AppColors.white,
                                             shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(16))
-                                            ),
+                                                borderRadius: BorderRadius.circular(16))),
                                         child: const Text('Add to Order'),
                                       );
                                     }
@@ -301,3 +328,9 @@ class ProductDetailsPage extends StatelessWidget {
     );
   }
 }
+
+// IconButton(
+//                   onPressed: () async => await cubit.addToFavorites(product.id),
+//                   icon: Icon(product.isFavorite == false? Icons.favorite_border : Icons.favorite),
+//                   color: AppColors.red,
+//                 ),

@@ -92,7 +92,7 @@ class _CreateAccountFormState extends State<CreateAccountForm> {
             'Email',
             style: Theme.of(context).textTheme.titleMedium!.copyWith(
                   fontWeight: FontWeight.bold,
-                ),
+            ),
           ),
           const SizedBox(height: 8),
           TextFormField(

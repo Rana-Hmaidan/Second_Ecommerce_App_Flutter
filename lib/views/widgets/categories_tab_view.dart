@@ -11,6 +11,10 @@ class CategoriesTabView extends StatelessWidget {
   Widget build(BuildContext context) {
     final cubit = BlocProvider.of<CategoryCubit>(context);
 
+    for(final category in dummyCategories){
+      cubit.addCategory(category);
+    }
+    
     return BlocBuilder<CategoryCubit, CategoryState>(
       bloc: cubit,
       buildWhen: (previous, current) =>
@@ -29,7 +33,7 @@ class CategoriesTabView extends StatelessWidget {
         } else if (state is CategoryLoaded) {
           final categories = state.categories;
           return ListView.separated(
-            itemCount: dummyCategories.length,
+            itemCount: categories.length,
             padding: const EdgeInsets.all(16.0),
             separatorBuilder: (_, index) => const SizedBox(height: 12),
             itemBuilder: (context, index) =>
