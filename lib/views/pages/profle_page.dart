@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:second_ecommerce_app_flutter/utils/route/app_routes.dart';
 import 'package:second_ecommerce_app_flutter/view_models/auth_cubit/auth_cubit.dart';
+import 'package:second_ecommerce_app_flutter/view_models/profile_cubit/profile_cubit.dart';
 import 'package:second_ecommerce_app_flutter/views/widgets/profile_list_tile.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -17,34 +18,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
     final cubit = BlocProvider.of<AuthCubit>(context);
 
-    return BlocConsumer<AuthCubit, AuthState>(
-        bloc: cubit,
-        listenWhen: (previous, current) =>
-            current is AuthFailure || 
-            current is AuthInitial,
-        listener: (context, state) {
-          if (state is AuthFailure) {
-            ScaffoldMessenger.of(context)
-              ..hideCurrentSnackBar()
-              ..showSnackBar(
-                SnackBar(
-                  content: Text(state.message),
-                  backgroundColor: Colors.red,
-                ),
-              );
-          } else if (state is AuthInitial) {
-            Navigator.of(context, rootNavigator: true).pushReplacementNamed(AppRoutes.homeLogin);
-          }
-        },
-      buildWhen: (previous, current) =>
-        current is AuthLoading || current is AuthLoaded || current is AuthFailure,
-      builder: (context, state) {
-        if (state is AuthLoading) {
-            return const Center(
-              child: CircularProgressIndicator.adaptive(),
-            );
-        }
-        else if(State is AuthLoaded) {
           return SafeArea(
           child: SingleChildScrollView(
               child: Padding(
@@ -119,10 +92,5 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
           ),
         );
-        }else {
-          return const SizedBox.shrink();
-        }
-      },
-    );
   }
 }

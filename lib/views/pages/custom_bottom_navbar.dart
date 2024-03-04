@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 //import 'package:second_ecommerce_app_flutter/utils/app_assets.dart';
 import 'package:second_ecommerce_app_flutter/utils/app_colors.dart';
 import 'package:second_ecommerce_app_flutter/view_models/auth_cubit/auth_cubit.dart';
 import 'package:second_ecommerce_app_flutter/view_models/cart_cubit/cart_cubit.dart';
 import 'package:second_ecommerce_app_flutter/view_models/favorites_cubit/favorites_cubit.dart';
+import 'package:second_ecommerce_app_flutter/view_models/profile_cubit/profile_cubit.dart';
 import 'package:second_ecommerce_app_flutter/views/pages/cart_page.dart';
 import 'package:second_ecommerce_app_flutter/views/pages/favorites_page.dart';
 import 'package:second_ecommerce_app_flutter/views/pages/home_page.dart';
@@ -26,6 +28,7 @@ class _CustomBottomNavbarState extends State<CustomBottomNavbar> {
   @override
   void initState() {
     super.initState();
+    FlutterNativeSplash.remove();
     _controller = PersistentTabController();
     _controller.addListener(() {
       setState(() {
@@ -59,6 +62,14 @@ class _CustomBottomNavbarState extends State<CustomBottomNavbar> {
         },
         child: const CartPage(),
       ),
+      // BlocProvider(
+      //   create: (context) {
+      //     final cubit = ProfileCubit();
+      //     cubit.getUserProfile();
+      //     return cubit;
+      //   },
+      //   child: const ProfilePage(),
+      // ),
       const ProfilePage(),
     ];
   }

@@ -34,6 +34,7 @@ class SocialItem extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const SizedBox(width: 16.0,),
               Icon(icon, color: color,),
               const SizedBox(width: 16.0,),
               Text(
@@ -43,6 +44,7 @@ class SocialItem extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 16.0,),
+              const Spacer(),
               if (actionIcon != null) Icon(actionIcon, color: AppColors.grey3,) else const SizedBox(),
             ],
           ),
