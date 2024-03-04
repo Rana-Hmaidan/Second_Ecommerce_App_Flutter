@@ -13,42 +13,47 @@ class OnboardingItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return Padding(
-      padding: const EdgeInsets.all(12.0),
+      padding: const EdgeInsets.symmetric(horizontal: 12.0) ,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
-                height: 250,
-                width: 200,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8.0),
-                  color: AppColors.grey2,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: CachedNetworkImage(
-                    imageUrl: onboardingItem.imgUrl,
-                    fit: BoxFit.contain,
-                    placeholder: (context, url) => const Center(
-                      child: CircularProgressIndicator.adaptive(),
-                    ),
-                    errorWidget: (context, url, error) => const Icon(Icons.error),
-                  ),
-                )
+          ClipRRect(
+            borderRadius: BorderRadius.circular(25.0),
+            child: Container(
+              width: 300,
+              height: 350,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(25.0),
+                color: AppColors.grey1,
               ),
-          const SizedBox(height: 10.0,),
-          Text(
-            onboardingItem.title,
-            style: Theme.of(context).textTheme.labelLarge!.copyWith(
-              fontWeight: FontWeight.w600,
+              child: CachedNetworkImage(
+                imageUrl: onboardingItem.imgUrl,
+                fit: BoxFit.cover,
+                placeholder: (context, url) => const Center(
+                  child: CircularProgressIndicator.adaptive(),
+                ),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
+              ),
             ),
           ),
-          const SizedBox(height: 10.0,),
+          const SizedBox(height: 14.0,),
+          Text(
+            onboardingItem.title,
+            style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
+            textAlign: TextAlign.center,
+            maxLines: 1,
+          ),
+          const SizedBox(height: 14.0,),
           Text(
             onboardingItem.description,
-            style: Theme.of(context).textTheme.labelSmall!.copyWith(
+            style: Theme.of(context).textTheme.bodySmall!.copyWith(
              color: Colors.grey,
             ),
+            textAlign: TextAlign.center,
+            maxLines: 1,
           ),
         ],
       ),

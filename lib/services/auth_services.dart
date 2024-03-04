@@ -108,7 +108,7 @@ class AuthServicesImpl implements AuthServices {
   @override
   Future<List<OnboardingModel>> getOnbordingItems() async =>
       await firestore.getCollection<OnboardingModel>(
-        path: ApiPaths.announcements(),
+        path: ApiPaths.onboardings(),
         builder: (data, documentId) => OnboardingModel.fromMap(data, documentId),
   );
 

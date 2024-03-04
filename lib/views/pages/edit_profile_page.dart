@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:second_ecommerce_app_flutter/models/user_data.dart';
 import 'package:second_ecommerce_app_flutter/utils/app_colors.dart';
 import 'package:second_ecommerce_app_flutter/utils/route/app_routes.dart';
 import 'package:second_ecommerce_app_flutter/view_models/profile_cubit/profile_cubit.dart';

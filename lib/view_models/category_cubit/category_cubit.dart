@@ -9,9 +9,9 @@ class CategoryCubit extends Cubit<CategoryState>{
 
   final homeServices = HomeServicesImpl();
 
-  Future<void> addCategory(CategoryItemModel category) async{
-    await homeServices.addCategory(category);
-  }
+  // Future<void> addCategory(CategoryItemModel category) async{
+  //   await homeServices.addCategory(category);
+  // }
 
   Future<void> getCategoryData() async {
     emit(CategoryLoading());

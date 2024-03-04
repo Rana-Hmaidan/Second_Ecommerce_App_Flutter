@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:second_ecommerce_app_flutter/models/category_item_model.dart';
+//import 'package:second_ecommerce_app_flutter/models/category_item_model.dart';
 import 'package:second_ecommerce_app_flutter/view_models/category_cubit/category_cubit.dart';
 import 'package:second_ecommerce_app_flutter/views/widgets/category_item.dart';
 
@@ -11,9 +11,9 @@ class CategoriesTabView extends StatelessWidget {
   Widget build(BuildContext context) {
     final cubit = BlocProvider.of<CategoryCubit>(context);
 
-    for(final category in dummyCategories){
-      cubit.addCategory(category);
-    }
+    // for(final category in dummyCategories){
+    //   cubit.addCategory(category);
+    // }
     
     return BlocBuilder<CategoryCubit, CategoryState>(
       bloc: cubit,

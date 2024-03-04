@@ -29,7 +29,7 @@ class MainButton extends StatelessWidget {
           backgroundColor: bgColor,
           foregroundColor: frColor,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(20),
           ),
         ),
         onPressed: onPressed,

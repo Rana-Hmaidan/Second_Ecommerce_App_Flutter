@@ -1,10 +1,11 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:second_ecommerce_app_flutter/models/onboarding_model.dart';
-import 'package:second_ecommerce_app_flutter/utils/app_colors.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
+//import 'package:second_ecommerce_app_flutter/utils/app_colors.dart';
 import 'package:second_ecommerce_app_flutter/utils/route/app_routes.dart';
 import 'package:second_ecommerce_app_flutter/view_models/onboarding_cubit/onboarding_cubit.dart';
+import 'package:second_ecommerce_app_flutter/views/widgets/main_button.dart';
 import 'package:second_ecommerce_app_flutter/views/widgets/onboarding_item_widget.dart';
 
 class OnBoardingPage extends StatefulWidget {
@@ -22,6 +23,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
   @override
   void initState() {
     super.initState();
+    FlutterNativeSplash.remove();
     _controller = CarouselController();
   }
 
@@ -67,7 +69,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
                     options: CarouselOptions(
                         autoPlay: true,
                         enlargeCenterPage: true,
-                        aspectRatio: 2.0,
+                        aspectRatio: 1,
                         onPageChanged: (index, reason) {
                           setState(() {
                             _current = index;
@@ -99,27 +101,32 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
                 ],
               ),
               const SizedBox(
-                height: 16.0,
+                height: 14.0,
               ),
-              
-              ElevatedButton(
-                onPressed: () {
+              MainButton(
+                title: 'Create Account',
+                onPressed: (){
                   Navigator.of(context).pushNamed(AppRoutes.createAccount);
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  foregroundColor: AppColors.white,
-                ),
-                child: Text(
-                  'Create Account',
-                  style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                        color: AppColors.white,
-                        fontWeight: FontWeight.w500,
-                      ),
-                ),
               ),
+              // ElevatedButton(
+              //   onPressed: () {
+              //     Navigator.of(context).pushNamed(AppRoutes.createAccount);
+              //   },
+              //   style: ElevatedButton.styleFrom(
+              //     backgroundColor: Theme.of(context).colorScheme.primary,
+              //     foregroundColor: AppColors.white,
+              //   ),
+              //   child: Text(
+              //     'Create Account',
+              //     style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+              //           color: AppColors.white,
+              //           fontWeight: FontWeight.w500,
+              //         ),
+              //   ),
+              // ),
               const SizedBox(
-                height: 16.0,
+                height: 14.0,
               ),
               TextButton(
                 onPressed: () {
@@ -132,9 +139,9 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
                       ),
                 ),
               ),
-              const SizedBox(
-                height: 36.0,
-              ),
+              // const SizedBox(
+              //   height: 30.0,
+              // ),
             ],
           ),
         );

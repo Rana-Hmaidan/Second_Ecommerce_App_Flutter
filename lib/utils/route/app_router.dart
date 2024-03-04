@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:second_ecommerce_app_flutter/models/product_item_model.dart';
-import 'package:second_ecommerce_app_flutter/models/user_data.dart';
 import 'package:second_ecommerce_app_flutter/utils/route/app_routes.dart';
 import 'package:second_ecommerce_app_flutter/view_models/auth_cubit/auth_cubit.dart';
 import 'package:second_ecommerce_app_flutter/view_models/location_cubit/location_cubit.dart';
@@ -18,7 +17,6 @@ import 'package:second_ecommerce_app_flutter/views/pages/location_page.dart';
 import 'package:second_ecommerce_app_flutter/views/pages/login_page.dart';
 import 'package:second_ecommerce_app_flutter/views/pages/payment_page.dart';
 import 'package:second_ecommerce_app_flutter/views/pages/product_details_page.dart';
-//import 'package:second_ecommerce_app_flutter/view_models/favorites_cubit/favorites_cubit.dart';
 import 'package:second_ecommerce_app_flutter/views/pages/search_page.dart';
 import 'package:second_ecommerce_app_flutter/view_models/onboarding_cubit/onboarding_cubit.dart';
 import 'package:second_ecommerce_app_flutter/views/pages/onboarding_page.dart';

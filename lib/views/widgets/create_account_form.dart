@@ -99,6 +99,7 @@ class _CreateAccountFormState extends State<CreateAccountForm> {
             ),
             validator: (value) => validateUserName(value!),
           ),
+          const SizedBox(height: 24),
           Text(
             'Email',
             style: Theme.of(context).textTheme.titleMedium!.copyWith(
