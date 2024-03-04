@@ -28,16 +28,16 @@ class _CreateAccountFormState extends State<CreateAccountForm> {
       debugPrint('Email: ${_emailController.text}');
       debugPrint('Password: ${_passwordController.text}');
 
-      await BlocProvider.of<AuthCubit>(context).signUpWithEmailAndPassword(
-        _userNameController.text,
-        _emailController.text,
-        _passwordController.text,
-      );
-      
       // ignore: use_build_context_synchronously
       Navigator.of(context).pushNamed( 
         AppRoutes.emailVerification,
         arguments: _emailController.text,
+      );
+
+      await BlocProvider.of<AuthCubit>(context).signUpWithEmailAndPassword(
+        _userNameController.text,
+        _emailController.text,
+        _passwordController.text,
       );
 
     }

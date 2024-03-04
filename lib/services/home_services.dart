@@ -12,7 +12,7 @@ abstract class HomeServices {
   Future<List<CategoryItemModel>> getCategories();
   Future<void> addProduct(ProductItemModel product);
   Future<void> deleteProduct(String id);
-  Future<void>addCategory(CategoryItemModel category);
+  Future<void> addCategory(CategoryItemModel category);
   Future<void> addAnnouncement(AnnouncementModel announcement);
   Future<void> addToFavorites(String uid, FavoriteItemModel favoriteItem);
   Future<void> removeFromFavorites(String uid, FavoriteItemModel favoriteItem);

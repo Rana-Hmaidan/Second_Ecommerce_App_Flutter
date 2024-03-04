@@ -14,12 +14,12 @@ class HomeTabView extends StatelessWidget {
   Widget build(BuildContext context) {
     final cubit = BlocProvider.of<HomeCubit>(context);
     
-    for(final product in dummyProducts){
-      cubit.addProduct(product);
-    }
-    for(final announcement in dummyAnnouncements){
-      cubit.addAnnouncement(announcement);
-    }
+    // for(final product in dummyProducts){
+    //   cubit.addProduct(product);
+    // }
+    // for(final announcement in dummyAnnouncements){
+    //   cubit.addAnnouncement(announcement);
+    // }
 
     return BlocBuilder<HomeCubit, HomeState>(
       bloc: cubit,
