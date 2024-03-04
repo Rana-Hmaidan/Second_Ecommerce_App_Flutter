@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 enum ProductSize {
   S,
   M,
@@ -17,6 +19,10 @@ enum ProductSize {
     } else {
       return ProductSize.XXL;
     }
+  }
+
+  factory ProductSize.fromSize(String size) {
+    return ProductSize.values.firstWhere((element) => element.name == size);
   }
 }
 
@@ -92,15 +98,16 @@ class ProductItemModel {
     result.addAll({'averageRate': averageRate});
     result.addAll({'searchCount': searchCount});
     result.addAll({'quantity': quantity});
-    result.addAll({'size': size});
+    if (size != null) {
+      result.addAll({'size': size!.name});
+    }
     result.addAll({'isFavorite': isFavorite});
     result.addAll({'isAddedToCart': isAddedToCart});
 
     return result;
   }
 
-  factory ProductItemModel.fromMap(
-      Map<String, dynamic> map, String documentId) {
+  factory ProductItemModel.fromMap(Map<String, dynamic> map, String documentId) {
     return ProductItemModel(
       id: documentId,
       name: map['name'] ?? '',
@@ -111,7 +118,7 @@ class ProductItemModel {
       averageRate: map['averageRate']?.toDouble() ?? 0.0,
       searchCount: map['searchCount']?.toInt() ?? 0,
       quantity: map['quantity']?.toInt() ?? 0,
-      size: map['size'] ?? '',
+      size: map['size'] != null ? ProductSize.fromSize(map['size']) : null,
       isFavorite: map['isFavorite'] ?? false,
       isAddedToCart: map['isAddedToCart'] ?? false,
     );

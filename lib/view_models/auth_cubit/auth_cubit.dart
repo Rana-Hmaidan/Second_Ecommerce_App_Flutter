@@ -1,3 +1,4 @@
+import 'package:second_ecommerce_app_flutter/models/user_data.dart';
 import 'package:second_ecommerce_app_flutter/services/auth_services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -36,6 +37,7 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
+
   Future<void> signOut() async {
     emit(AuthLoading());
     try {
@@ -58,5 +60,22 @@ class AuthCubit extends Cubit<AuthState> {
     } catch (e) {
       emit(AuthFailure(e.toString()));
     }
+  }
+
+   Future<UserData?> getCurrentUserData() async {
+    emit(AuthLoading());
+    try {
+      final currentUser = await authServices.currentUser();
+      final user = await authServices.getUser(currentUser!.uid);
+      if (user!= null) {
+        emit(AuthLoaded(user));
+        return user;
+      } else {
+        emit(AuthInitial());
+      }
+    } catch (e) {
+      emit(AuthFailure(e.toString()));
+    }
+    return null;
   }
 }

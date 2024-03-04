@@ -115,7 +115,6 @@ class CartItemWidget extends StatelessWidget {
                           fontWeight: FontWeight.w600,
                         ),
                   ),
-                  if (cartOrderItemOriginal.size != null)
                     Text.rich(
                       TextSpan(
                         text: 'Size: ',
@@ -125,7 +124,7 @@ class CartItemWidget extends StatelessWidget {
                           ),
                         children: [
                           TextSpan(
-                            text: cartOrderItemOriginal.size!.name,
+                            text: cartOrderItemOriginal.size.name,
                             style: Theme.of(context).textTheme.titleMedium,
                           ),
                         ],

@@ -9,11 +9,23 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   final AuthServices authServices = AuthServicesImpl();
 
-  void getUserDetails(String userId) async {
+  // Future<void> getUserProfile() async {
+  //   emit(ProfileLoading());
+  //   try {
+  //     final currentUser = await authServices.currentUser();
+  //     final user = await authServices.getUser(currentUser!.uid);
+  //     await Future.delayed(const Duration(seconds: 1));
+  //     emit(ProfileLoaded(user!));
+  //   } catch (e) {
+  //     emit(ProfileError(e.toString()));
+  //   }
+  // }
+
+  Future<void> getUserDetails() async {
     emit(EditProfileLoading());
     try {
-      //final user = dummyUsers.firstWhere((user) => user.id == userId);
-      final user = await authServices.getUser(userId);
+      final currentUser = await authServices.currentUser();
+      final user = await authServices.getUser(currentUser!.uid);
       await Future.delayed(const Duration(seconds: 1));
       emit(EditProfileLoaded(user!));
     } catch (e) {
@@ -21,7 +33,24 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
-  Future<void> EditProfile(String email, String username) async {
-    emit(EditProfileLoading());
+  Future<void> editProfile(String uId, String email, String username) async {
+    emit(SaveChangesLoading());
+    try{
+      UserData? user = await authServices.getUser(uId);
+      user =  user!.copyWith(email: email, username: username);
+      await authServices.updateUserData(
+        user.id, 
+        user
+      );
+      if(user.id == uId){
+        emit(SaveChangesSuccess());
+      }
+      else{
+        emit(SaveChangesFailure('Failed to Update!'));
+      }
+      emit(EditProfileLoaded(user));
+    }catch (e){
+      EditProfileError(e.toString());
+    } 
   }
 }

@@ -38,9 +38,10 @@ class MyApp extends StatelessWidget {
             return MaterialApp(
               title: 'E-Commerce App',
               theme: AppTheme.lightTheme(),
+              debugShowCheckedModeBanner: false,
               initialRoute: state is AuthSuccess
                   ? AppRoutes.bottomNavbar
-                  : AppRoutes.homeLogin,
+                  : AppRoutes.onboardingPage,
               onGenerateRoute: AppRouter.onGenerateRoute,
             );
           },

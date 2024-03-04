@@ -6,6 +6,7 @@ import 'package:second_ecommerce_app_flutter/views/widgets/main_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:second_ecommerce_app_flutter/views/widgets/social_item.dart';
+import 'package:second_ecommerce_app_flutter/views/widgets/forgot_password_modal_bottomsheet.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
@@ -15,6 +16,7 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
+
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -70,8 +72,10 @@ class _LoginFormState extends State<LoginForm> {
           const SizedBox(height: 8),
           TextFormField(
             controller: _emailController,
-            decoration: const InputDecoration(
+            decoration:  InputDecoration(
               hintText: 'Enter your email',
+              prefixIcon: const Icon(Icons.email),
+              prefixIconColor: _emailController.text.isNotEmpty ? Theme.of(context).colorScheme.primary : AppColors.grey,
             ),
             validator: (value) => validateEmail(value!),
           ),
@@ -87,6 +91,8 @@ class _LoginFormState extends State<LoginForm> {
             controller: _passwordController,
             decoration: InputDecoration(
               hintText: 'Enter your password',
+              prefixIcon: const Icon(Icons.password),
+              prefixIconColor: _passwordController.text.isNotEmpty ? Theme.of(context).colorScheme.primary : AppColors.grey,
               suffixIcon: IconButton(
                 onPressed: () {
                   setState(() {
@@ -110,10 +116,20 @@ class _LoginFormState extends State<LoginForm> {
             },
           ),
           Align(
-            alignment: AlignmentDirectional.centerEnd,
+            alignment: Alignment.centerRight,
             child: TextButton(
-              onPressed: () {},
-              child: const Text('Forgot Password?'),
+                onPressed: () => showModalBottomSheet(
+                  useSafeArea: true,
+                  isScrollControlled: true,
+                  context: context, 
+                  builder: (ctx) => ForgotPasswordModalBottomsheet(userEmail: _emailController.text),
+                ),
+                child: Text(
+                  'Forgot Password?',
+                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                      color: Theme.of(context).colorScheme.primary,
+                  ),
+                ),
             ),
           ),
           const SizedBox(height: 36),

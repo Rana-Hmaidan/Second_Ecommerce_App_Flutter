@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:second_ecommerce_app_flutter/models/search_item_model.dart';
 import 'package:second_ecommerce_app_flutter/utils/app_colors.dart';
+import 'package:second_ecommerce_app_flutter/view_models/search_cubit/search_cubit.dart';
 import 'package:second_ecommerce_app_flutter/views/widgets/last_search_item.dart';
 import 'package:second_ecommerce_app_flutter/views/widgets/popular_search_item.dart';
 
@@ -12,124 +14,160 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-
   final TextEditingController _searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+
+    final cubit = BlocProvider.of<SearchCubit>(context);
+
     return Scaffold(
       body: SafeArea(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          onPressed: (){
-                            Navigator.of(context).pop();
-                          }, 
-                          icon: const Icon(Icons.arrow_back_ios_new_rounded),
-                        ),
-                        const SizedBox(width: 6),
-                        SizedBox(
-                          width: 400,
-                          height: 50,
-                          child: TextField(
-                            controller: _searchController,
-                            decoration: InputDecoration(
-                              hintText: 'Search...',
-                              suffixIcon: IconButton(
-                                icon: const Icon(Icons.clear),
-                                onPressed: () => _searchController.clear(),
+        child: BlocBuilder<SearchCubit, SearchState>(
+          bloc: cubit,
+          buildWhen: (previous, current) => 
+            current is SearchLoaded ||
+            current is SearchLoading ||
+            current is SearchError,
+          builder: (context, state) {
+            if(state is SearchLoading){
+              return const Center(
+                child: CircularProgressIndicator.adaptive(),
+              );
+            }else if(state is SearchError){
+              return Center(
+              child: Text(state.message),
+              );
+            }else if(state is SearchLoaded){
+              return SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                          ),
+                          const SizedBox(width: 6),
+                          SizedBox(
+                            width: 400,
+                            height: 50,
+                            child: TextField(
+                              controller: _searchController,
+                              decoration: InputDecoration(
+                                hintText: 'Search...',
+                                suffixIcon: IconButton(
+                                  icon: const Icon(Icons.clear),
+                                  onPressed: () => _searchController.clear(),
+                                ),
+                                prefixIcon: IconButton(
+                                  icon: const Icon(Icons.search),
+                                  onPressed: () {},
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(18.0),
+                                ),
+                                prefixIconColor: AppColors.black,
+                                suffixIconColor: AppColors.black,
                               ),
-                              prefixIcon: IconButton(
-                                icon: const Icon(Icons.search),
-                                onPressed: () {},
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(18.0), 
-                              ),
-                              prefixIconColor: AppColors.black,
-                              suffixIconColor: AppColors.black,
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 24.0,),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Last Search',
-                          style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                            fontWeight: FontWeight.w600,
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 24.0,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Last Search',
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium!
+                                .copyWith(
+                                  fontWeight: FontWeight.w600,
+                                ),
                           ),
-                        ),
-                        TextButton(
-                          onPressed: (){},
-                          style: TextButton.styleFrom(
-                            foregroundColor: Theme.of(context).colorScheme.primary,
-                          ), 
-                          child: const Text('Clear All'),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10,),
-                    SizedBox(
-                      child: Wrap(
-                        direction: Axis.horizontal,
-                        children: dummylastSearches.map((item) {
-                          return Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                            Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: Expanded(
-                              child: LastSearchItem(
-                                      value: item, 
-                                      onPressed: () {  }, 
-                                      onPresseedIcon: () {  },
+                          TextButton(
+                            onPressed: () {},
+                            style: TextButton.styleFrom(
+                              foregroundColor:
+                                  Theme.of(context).colorScheme.primary,
+                            ),
+                            child: const Text('Clear All'),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      SizedBox(
+                        child: Wrap(
+                          direction: Axis.horizontal,
+                          children: state.lastSerchItems.map((item) {
+                            return Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: Expanded(
+                                    child: LastSearchItem(
+                                      value: item,
+                                      onPressed: () {},
+                                      onPresseedIcon: () {},
                                     ),
-                              ),
-                            ),
-                            ],
-                          );
-                        }).toList(),
+                                  ),
+                                ),
+                              ],
+                            );
+                          }).toList(),
+                        ),
                       ),
-                    ),
-                      const SizedBox(height: 24,),
+                      const SizedBox(
+                        height: 24,
+                      ),
                       Text(
-                          'Popular Search',
-                          style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
+                        'Popular Search',
+                        style:
+                            Theme.of(context).textTheme.titleMedium!.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                ),
                       ),
-                      const SizedBox(height: 10,),
+                      const SizedBox(
+                        height: 10,
+                      ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: ListView.separated(
-                          itemCount: dummyPopularSearches.length,
+                          itemCount: state.popularsearchItems.length,
                           physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
-                          separatorBuilder: (_, index) => const SizedBox(height: 10.0),
+                          separatorBuilder: (_, index) =>
+                              const SizedBox(height: 10.0),
                           itemBuilder: (context, index) => PopularSearchItem(
                             searchItem: dummyPopularSearches[index],
                           ),
                         ),
                       ),
-                  ]
-                ),
+                    ]),
               ),
-            ),
+            );
+            }else{
+              return const SizedBox();
+            }
+          },
+        ),
       ),
     );
   }

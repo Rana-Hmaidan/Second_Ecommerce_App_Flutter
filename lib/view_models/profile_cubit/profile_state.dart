@@ -6,6 +6,17 @@ final class ProfileInitial extends ProfileState {}
 
 final class ProfileLoading extends ProfileState {}
 
+final class ProfileLoaded extends ProfileState {
+  UserData user;
+  ProfileLoaded(this.user);
+}
+
+final class ProfileError extends ProfileState {
+  final String message;
+  ProfileError(this.message);
+}
+
+
 final class EditProfileLoading extends ProfileState {}
 
 final class EditProfileLoaded extends ProfileState {
@@ -18,7 +29,11 @@ final class EditProfileError extends ProfileState {
   EditProfileError(this.message);
 }
 
-final class ProfileError extends ProfileState {
+final class SaveChangesLoading extends ProfileState {}
+final class SaveChangesSuccess extends ProfileState {}
+
+final class SaveChangesFailure extends ProfileState {
   final String message;
-  ProfileError(this.message);
+
+  SaveChangesFailure(this.message);
 }

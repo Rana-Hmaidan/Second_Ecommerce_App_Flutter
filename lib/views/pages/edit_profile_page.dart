@@ -4,7 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:second_ecommerce_app_flutter/models/user_data.dart';
 import 'package:second_ecommerce_app_flutter/utils/app_colors.dart';
+import 'package:second_ecommerce_app_flutter/utils/route/app_routes.dart';
 import 'package:second_ecommerce_app_flutter/view_models/profile_cubit/profile_cubit.dart';
+import 'package:second_ecommerce_app_flutter/views/widgets/main_button.dart';
 import 'package:second_ecommerce_app_flutter/views/widgets/social_item.dart';
 
 class EditProfilePage extends StatefulWidget {
@@ -19,7 +21,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   late final GlobalKey<FormState> _formKey;
   late final TextEditingController _userNameController, _emailController;
   late FocusNode _userNameFocusNode,_emailFocusNode;
-  String? _userName ,_email;
+ // String? _userName ,_email;
 
   @override
   void initState(){
@@ -38,24 +40,25 @@ class _EditProfilePageState extends State<EditProfilePage> {
     super.dispose();
   }
 
-  Future<void> editProfile() async {
-    if (_formKey.currentState!.validate()) {
-      await BlocProvider.of<ProfileCubit>(context).EditProfile(
-        _emailController.text,
-        _userNameController.text,
-      );
-    }
-  }
+  // Future<void> editProfile(String uid) async {
+  //   if (_formKey.currentState!.validate()) {
+  //     await BlocProvider.of<ProfileCubit>(context).EditProfile(
+  //       uid,
+  //       _emailController.text,
+  //       _userNameController.text,
+  //     );
+  //   }
+  // }
   @override
   Widget build(BuildContext context) {
 
     final size = MediaQuery.of(context).size;
     
-    final user = ModalRoute.of(context)!.settings.arguments as UserData;
+    //final user = ModalRoute.of(context)!.settings.arguments as UserData;
 
     final cubit = BlocProvider.of<ProfileCubit>(context);
 
-    return  BlocBuilder<ProfileCubit, ProfileState>(
+    return BlocBuilder<ProfileCubit, ProfileState>(
       bloc: cubit,
       buildWhen: (previous, current) =>
           current is EditProfileLoading ||
@@ -71,6 +74,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             child: Text(state.message),
           );
         } else if (state is EditProfileLoaded) {
+          final user = state.user;
           return Padding(
           padding: const EdgeInsets.all(8.0),
           child: SingleChildScrollView(
@@ -103,7 +107,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       const SizedBox(height: 24.0,),
                       TextFormField(
                         controller: _userNameController,
-                        onChanged: (value) => _userName = value,
                         keyboardType: TextInputType.name,
                         focusNode: _userNameFocusNode,
                         textInputAction: TextInputAction.next,
@@ -136,13 +139,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       const SizedBox(height: 12.0,),
                       TextFormField(
                         controller: _emailController,
-                        onChanged: (value) => _email = value,
                         keyboardType: TextInputType.emailAddress,
                         focusNode: _emailFocusNode,
                         textInputAction: TextInputAction.next,
                         onEditingComplete: (){
                           _emailFocusNode.unfocus();
-                          editProfile();
+                          if (_formKey.currentState!.validate()) {
+                            cubit.editProfile(
+                              user.id, 
+                              _emailController.text, 
+                              _userNameController.text,
+                            );
+                          }
                         },
                         validator: (value){
                           if(value == null || value.isEmpty){
@@ -175,23 +183,60 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           onTap: (){},
                       ),
                       const SizedBox(height: 36.0,),
-                      ElevatedButton(
-                        onPressed: editProfile,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(context).primaryColor,
-                          foregroundColor: AppColors.white,
-                        ),
-                        child: Text(
-                            'Save Changes',
-                            style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                                color: AppColors.white,
-                                fontWeight: FontWeight.w600),
-                        ),
-                      ),
+                      BlocConsumer<ProfileCubit, ProfileState>(
+                        bloc: cubit,
+                        listenWhen: (previous, current) =>
+                          current is SaveChangesSuccess || 
+                          current is SaveChangesFailure,
+                        listener: (context, state) {
+                        if (state is SaveChangesSuccess) {
+                          Navigator.pushNamed(context, AppRoutes.editProfile);
+                        } else if (state is SaveChangesFailure) {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                              title: const Text('Error'),
+                              content: Text(state.message),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text('OK'),
+                                ),
+                              ],
+                              );
+                          });
+                        }
+                        },
+                      buildWhen: (previous, current) =>
+                        current is SaveChangesLoading ||
+                        current is SaveChangesSuccess ||
+                        current is SaveChangesFailure ,
+                      builder: (context, state) {
+                        if (state is SaveChangesLoading) {
+                          return const MainButton(
+                            child: CircularProgressIndicator.adaptive(),
+                          );
+                        }
+                        return MainButton(
+                          onPressed: (){
+                            if (_formKey.currentState!.validate()) {
+                            cubit.editProfile(
+                              user.id, 
+                             _emailController.text, 
+                             _userNameController.text,
+                            );
+                            }
+                          },
+                          title: 'Save Changes',
+                          );
+                        },
+                      ),        
                     ],
                   ),
                 ),
-            
               ],
             ),
           ),
@@ -203,3 +248,25 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 }
+
+  // ElevatedButton(
+                      //   onPressed: (){
+                      //     if (_formKey.currentState!.validate()) {
+                      //       cubit.editProfile(
+                      //         user.id, 
+                      //         _emailController.text, 
+                      //         _userNameController.text,
+                      //       );
+                      //     }
+                      //   },
+                      //   style: ElevatedButton.styleFrom(
+                      //     backgroundColor: Theme.of(context).primaryColor,
+                      //     foregroundColor: AppColors.white,
+                      //   ),
+                      //   child: Text(
+                      //       'Save Changes',
+                      //       style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                      //           color: AppColors.white,
+                      //           fontWeight: FontWeight.w600),
+                      //   ),
+                      // ),

@@ -15,6 +15,7 @@ class CreateAccountForm extends StatefulWidget {
 }
 
 class _CreateAccountFormState extends State<CreateAccountForm> {
+
   final _formKey = GlobalKey<FormState>();
   final _userNameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -26,11 +27,19 @@ class _CreateAccountFormState extends State<CreateAccountForm> {
       debugPrint('Username: ${_userNameController.text}');
       debugPrint('Email: ${_emailController.text}');
       debugPrint('Password: ${_passwordController.text}');
+
       await BlocProvider.of<AuthCubit>(context).signUpWithEmailAndPassword(
         _userNameController.text,
         _emailController.text,
         _passwordController.text,
       );
+      
+      // ignore: use_build_context_synchronously
+      Navigator.of(context).pushNamed( 
+        AppRoutes.emailVerification,
+        arguments: _emailController.text,
+      );
+
     }
   }
 
@@ -83,8 +92,10 @@ class _CreateAccountFormState extends State<CreateAccountForm> {
           const SizedBox(height: 8),
           TextFormField(
             controller: _userNameController,
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               hintText: 'Create your username',
+              prefixIcon: const Icon(FontAwesomeIcons.user),
+              prefixIconColor:  _userNameController.text.isNotEmpty ? Theme.of(context).colorScheme.primary : AppColors.grey,
             ),
             validator: (value) => validateUserName(value!),
           ),
@@ -97,8 +108,10 @@ class _CreateAccountFormState extends State<CreateAccountForm> {
           const SizedBox(height: 8),
           TextFormField(
             controller: _emailController,
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               hintText: 'Create your email',
+              prefixIcon:  const Icon(Icons.email),
+              prefixIconColor: _emailController.text.isNotEmpty ? Theme.of(context).colorScheme.primary : AppColors.grey,
             ),
             validator: (value) => validateEmail(value!),
           ),
@@ -114,6 +127,8 @@ class _CreateAccountFormState extends State<CreateAccountForm> {
             controller: _passwordController,
             decoration: InputDecoration(
               hintText: 'Create your password',
+              prefixIcon: const Icon(Icons.password),
+              prefixIconColor: _passwordController.text.isNotEmpty ? Theme.of(context).colorScheme.primary : AppColors.grey,
               suffixIcon: IconButton(
                 onPressed: () {
                   setState(() {
@@ -160,7 +175,7 @@ class _CreateAccountFormState extends State<CreateAccountForm> {
                           ),
                         ],
                       );
-                    });
+                 });
               }
             },
             buildWhen: (previous, current) =>

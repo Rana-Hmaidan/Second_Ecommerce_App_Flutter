@@ -8,6 +8,11 @@ final class AuthLoading extends AuthState {}
 
 final class AuthSuccess extends AuthState {}
 
+final class AuthLoaded extends AuthState{
+  UserData user;
+  AuthLoaded(this.user);
+}
+
 final class AuthFailure extends AuthState {
   final String message;
 

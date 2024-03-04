@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:second_ecommerce_app_flutter/models/onboarding_model.dart';
 import 'package:second_ecommerce_app_flutter/models/user_data.dart';
 import 'package:second_ecommerce_app_flutter/services/firestore_services.dart';
 import 'package:second_ecommerce_app_flutter/utils/api_paths.dart';
@@ -10,6 +11,9 @@ abstract class AuthServices {
   Future<bool> isLoggedIn();
   Future<User?> currentUser();
   Future<UserData?> getUser(String id);
+  Future<void> updateUserData(String uid, UserData user);
+  Future<List<OnboardingModel>> getOnbordingItems();
+  Future<void> addOnbordingItem(OnboardingModel onboardingItem);
 }
 
 class AuthServicesImpl implements AuthServices {
@@ -47,6 +51,7 @@ class AuthServicesImpl implements AuthServices {
 
   @override
   Future<bool> signUpWithEmailAndPassword(String username, String email, String password) async {
+    
     final userCredential = await firebaseAuth.createUserWithEmailAndPassword(
       email: email,
       password: password,
@@ -65,6 +70,7 @@ class AuthServicesImpl implements AuthServices {
         path: ApiPaths.user(currentUserData.id),
         data: currentUserData.toMap(),
       );
+
       return true;
     } else {
       return false;
@@ -81,10 +87,30 @@ class AuthServicesImpl implements AuthServices {
     return Future.value(firebaseAuth.currentUser);
   }
 
-   @override
+  @override
   Future<UserData> getUser(String id) async =>
       await firestore.getDocument<UserData>(
         path: ApiPaths.user(id),
         builder: (data, documentId) => UserData.fromMap(data, documentId),
   );
+
+  @override
+  Future<void> updateUserData(String id, UserData user) async =>
+    await firestore.setData(
+        path: ApiPaths.user(id),
+        data: user.toMap(),
+      );
+
+   @override
+  Future<void> addOnbordingItem(OnboardingModel onboardingItem) async => 
+    await firestore.setData(path: ApiPaths.onboarding(onboardingItem.id), data: onboardingItem.toMap());
+
+  @override
+  Future<List<OnboardingModel>> getOnbordingItems() async =>
+      await firestore.getCollection<OnboardingModel>(
+        path: ApiPaths.announcements(),
+        builder: (data, documentId) => OnboardingModel.fromMap(data, documentId),
+  );
+
+
 }

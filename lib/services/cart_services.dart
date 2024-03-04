@@ -28,4 +28,5 @@ class CartServicesImpl implements CartServices {
   @override
   Future<void> deleteCartItem(String uid, CartOrdersModel cartOrder) async =>
     await firestoreService.deleteData(path: ApiPaths.cartItem(uid, cartOrder.id));
+
 }

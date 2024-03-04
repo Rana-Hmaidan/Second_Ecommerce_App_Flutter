@@ -42,7 +42,7 @@ class HomeServicesImpl extends HomeServices {
   Future<void> addCategory(CategoryItemModel category) async => 
     await firestoreService.setData(path: ApiPaths.category(category.id), data: category.toMap());
 
-   @override
+  @override
   Future<void> addAnnouncement(AnnouncementModel announcement) async => 
     await firestoreService.setData(path: ApiPaths.announcement(announcement.id), data: announcement.toMap());
   

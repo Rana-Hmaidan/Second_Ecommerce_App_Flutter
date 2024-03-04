@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dash/flutter_dash.dart';
 import 'package:second_ecommerce_app_flutter/utils/app_colors.dart';
+import 'package:second_ecommerce_app_flutter/utils/route/app_routes.dart';
 import 'package:second_ecommerce_app_flutter/view_models/cart_cubit/cart_cubit.dart';
 import 'package:second_ecommerce_app_flutter/views/widgets/cart_item_widget.dart';
 import 'package:second_ecommerce_app_flutter/views/widgets/main_button.dart';
@@ -58,9 +59,9 @@ class CartPage extends StatelessWidget {
                     height: 50,
                     child: MainButton(
                       onPressed: () {
-                        //   Navigator.of(context, rootNavigator: true).pushNamed(
-                        //   AppRoutes.payment,
-                        // );
+                          Navigator.of(context, rootNavigator: true).pushNamed(
+                          AppRoutes.payment,
+                        );
                       },
                       child: const Text('Checkout'),
                     ),

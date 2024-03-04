@@ -53,7 +53,7 @@ class FavoritesCubit extends Cubit<FavoritesState>{
         currentUser!.uid,
         favoriteItem,
       );
-      final favoritesItems = await favoritesServices.getFavoritesItems(currentUser!.uid);
+      final favoritesItems = await favoritesServices.getFavoritesItems(currentUser.uid);
       emit(FavoriteLoadedState(
         favoritesItems,
       ));

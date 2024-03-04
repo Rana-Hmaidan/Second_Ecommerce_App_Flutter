@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:second_ecommerce_app_flutter/models/favorite_item_model.dart';
 import 'package:second_ecommerce_app_flutter/utils/app_colors.dart';
 import 'package:second_ecommerce_app_flutter/view_models/favorites_cubit/favorites_cubit.dart';
-import 'package:second_ecommerce_app_flutter/view_models/home_cubit/home_cubit.dart';
+//import 'package:second_ecommerce_app_flutter/view_models/home_cubit/home_cubit.dart';
 
 class FavoriteItem extends StatelessWidget {
 

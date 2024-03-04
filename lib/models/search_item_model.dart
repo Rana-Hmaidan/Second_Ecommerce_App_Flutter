@@ -1,4 +1,6 @@
 
+// ignore_for_file: constant_identifier_names
+
 import 'package:second_ecommerce_app_flutter/models/product_item_model.dart';
 
 enum  Description {All, Latest, MostPopular , Hot, New, Popular}

@@ -22,14 +22,12 @@ class CategoryItemModel{
     return result;
   }
 
-  factory CategoryItemModel.fromMap(
-    Map<String, dynamic> map, String documentId) {
-
+  factory CategoryItemModel.fromMap(Map<String, dynamic> map, String documentId) {
     return CategoryItemModel(
       id: documentId,
       name: map['name'] ?? '',
       imgUrl: map['imgUrl'] ?? '',
-      productsCount: map['productsCount'].toInt() ?? 0 ,
+      productsCount: map['productsCount'].toInt() ?? 1 ,
     );
   }
 }

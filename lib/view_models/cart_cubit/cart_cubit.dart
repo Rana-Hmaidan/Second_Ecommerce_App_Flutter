@@ -78,7 +78,7 @@ class CartCubit extends Cubit<CartState>{
         currentUser!.uid,
         cartOrder,
       );
-      final cartItems = await cartServices.getCartItems(currentUser!.uid);
+      final cartItems = await cartServices.getCartItems(currentUser.uid);
       final subTotal = cartItems.fold<double>( 0, (sum, item) => sum + (item.product.price * item.quantity));
       emit(CartLoaded(
         cartItems: cartItems,

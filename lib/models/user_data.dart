@@ -11,8 +11,23 @@ class UserData {
     required this.username, 
     required this.password,
     this.imgUrl = '',
+  });
+
+   UserData copyWith({
+    String? id,
+    String? email,
+    String? username,
+    String? password,
+    String? imgUrl
+  }) {
+    return UserData(
+      id: id ?? this.id,
+      email: email ?? this.email,
+      username: username ?? this.username,
+      password: password ?? this.password,
+      imgUrl: imgUrl ?? this.imgUrl
+    );
   }
-  );
 
   Map<String, dynamic> toMap() {
     final result = <String, dynamic>{};
